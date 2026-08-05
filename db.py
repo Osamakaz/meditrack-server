@@ -125,6 +125,13 @@ def delete_device(device_id):
     conn.close()
 
 
+def delete_all():
+    conn = get_conn()
+    conn.execute("DELETE FROM devices")
+    conn.commit()
+    conn.close()
+
+
 # ---------- لسيرفر /verify ----------
 
 def verify_status(device_id):
