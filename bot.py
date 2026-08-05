@@ -293,6 +293,18 @@ def status(message):
         bot.reply_to(message, "لا يوجد ترخيص مفعّل لديك.")
 
 
+@bot.message_handler(commands=["reset"])
+def reset_devices(message):
+    if not is_admin(message.from_user.id):
+        return
+    db.delete_all()
+    bot.reply_to(
+        message,
+        "🗑️ **تم حذف جميع الأجهزة والطلبات**\n\n"
+        "بدأ النظام من جديد. أي جهاز سابق أصبح غير مسجّل.",
+    )
+
+
 @bot.message_handler(commands=["help"])
 def help_admin(message):
     if not is_admin(message.from_user.id):
