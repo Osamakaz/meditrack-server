@@ -27,7 +27,7 @@ if os.environ.get("PA_PROXY", "") == "1":
 
 SECRET_KEY = "MediTrack2024Key"  # يجب أن يطابق مفتاح LicenseManager.kt
 
-BANK_NAME = "بنك بيمو السعودي الفرنسي"
+BANK_NAME = "Sham Cash"
 ACCOUNT_NUMBER = "9f9dd7b169278dea153dcbd1a8ff5a27"
 ACCOUNT_NAME = "أسامه فاضل الخزعل "
 IBAN = "SA0000000000000000000000"
