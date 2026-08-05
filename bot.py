@@ -2,6 +2,8 @@ import telebot
 import hashlib
 import os
 import re
+import sys
+import time
 
 import db
 
@@ -17,6 +19,11 @@ if not BOT_TOKEN:
             ADMIN_IDS = config.ADMIN_IDS
     except ImportError:
         pass
+
+# على PythonAnywhere المجاني، اتصالات الخروج تمر عبر بروكسي خاص.
+# فعّل عبر متغير بيئة: PA_PROXY=1 (أو شغّل على PythonAnywhere مباشرة)
+if os.environ.get("PA_PROXY", "") == "1":
+    telebot.apihelper.proxy = {"https": "http://proxy.server:3128"}
 
 SECRET_KEY = "MediTrack2024Key"  # يجب أن يطابق مفتاح LicenseManager.kt
 
@@ -505,10 +512,38 @@ def set_webhook(url: str) -> None:
         bot.set_webhook(url)
 
 
+def poll_once(duration: float = 50) -> None:
+    """يجلب التحديثات ويعالجها لمدة قصيرة ثم يتوقف.
+    يُستعمل مع GitHub Actions (تشغيل مجدول كل بضع دقائق)."""
+    try:
+        bot.delete_webhook()
+    except Exception:
+        pass
+    offset = 0
+    end = time.time() + duration
+    while time.time() < end:
+        try:
+            updates = bot.get_updates(offset=offset, timeout=1)
+        except Exception as e:
+            print("⚠️  get_updates فشل:", e)
+            time.sleep(3)
+            continue
+        for u in updates:
+            bot.process_new_updates([u])
+            if u.update_id >= offset:
+                offset = u.update_id + 1
+
+
 if __name__ == "__main__":
     db.init_db()
     if not BOT_TOKEN:
         print("⚠️  ضع التوكن: TELEGRAM_BOT_TOKEN=... python bot.py")
         raise SystemExit(1)
-    print("✅ البوت يعمل (polling)...")
-    bot.infinity_polling()
+    if "--once" in sys.argv:
+        print("✅ جولة واحدة (GitHub Actions)...")
+        poll_once()
+        db.export_status_json("status.json")
+        print("✅ انتهت الجولة وحدّثت status.json")
+    else:
+        print("✅ البوت يعمل (polling)...")
+        bot.infinity_polling()

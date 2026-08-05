@@ -133,3 +133,15 @@ def verify_status(device_id):
     if row is None:
         return "not_found"
     return row["status"]
+
+
+def export_status_json(path):
+    """يكتب status.json بصيغة: {"devices": {"<device_id>": "<status>", ...}}
+    تُنشر على GitHub Pages ليتحقق منها التطبيق."""
+    conn = get_conn()
+    rows = conn.execute("SELECT device_id, status FROM devices").fetchall()
+    conn.close()
+    data = {"devices": {row["device_id"]: row["status"] for row in rows}}
+    with open(path, "w", encoding="utf-8") as f:
+        import json
+        json.dump(data, f, ensure_ascii=False, indent=2)
