@@ -1,4 +1,4 @@
-name: license-bot
+name: license-bot v2
 
 on:
   schedule:
