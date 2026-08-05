@@ -28,10 +28,10 @@ if os.environ.get("PA_PROXY", "") == "1":
 SECRET_KEY = "MediTrack2024Key"  # يجب أن يطابق مفتاح LicenseManager.kt
 
 BANK_NAME = "بنك بيمو السعودي الفرنسي"
-ACCOUNT_NUMBER = "0195812"
+ACCOUNT_NUMBER = "040101958120013001000"
 ACCOUNT_NAME = "اسم صاحب الحساب"
 IBAN = "SA0000000000000000000000"
-PRICE = "50 ريال"
+PRICE = "$100 أو ما يعادلها بالليرة السورية "
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
