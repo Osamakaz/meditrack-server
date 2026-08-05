@@ -1,3 +1,5 @@
 {
-  "devices": {}
+  "devices": {
+    "TEST12345678": "pending"
+  }
 }
