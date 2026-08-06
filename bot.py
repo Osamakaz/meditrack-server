@@ -579,6 +579,13 @@ if __name__ == "__main__":
     if not BOT_TOKEN:
         print("⚠️  ضع التوكن: TELEGRAM_BOT_TOKEN=... python bot.py")
         raise SystemExit(1)
+    # فحص صحة التوكن قبل التشغيل حتى يظهر أي خلل بوضوح في سجل Actions
+    try:
+        me = bot.get_me()
+        print(f"✅ البوت متصل باسم: {me.first_name} (@{me.username})")
+    except Exception as e:
+        print("❌ فشل الاتصال بتيلغرام (توكن غير صحيح أو لا شبكة):", e)
+        raise SystemExit(1)
     if "--once" in sys.argv:
         print("✅ جولة واحدة (GitHub Actions)...")
         poll_once()
